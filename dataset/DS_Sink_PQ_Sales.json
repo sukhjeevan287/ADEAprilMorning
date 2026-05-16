@@ -1,0 +1,22 @@
+{
+	"name": "DS_Sink_PQ_Sales",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_AprilADE",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "salesp.parquet",
+				"folderPath": "sink",
+				"fileSystem": "sink"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,24 @@
+{
+	"name": "DS_Rest_DatA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DS_Source_Rest_JSON_Data",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"RelativeURL": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@dataset().RelativeURL",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

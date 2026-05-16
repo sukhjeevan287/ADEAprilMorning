@@ -1,0 +1,15 @@
+{
+	"name": "ademorningapriltraining",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Enabled",
+			"editable": true
+		}
+	},
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "ebb8731b-8de8-45ee-9cca-19617038ea91",
+		"tenantId": "bceda1ec-b3e3-40e9-811c-29154bdad523"
+	}
+}

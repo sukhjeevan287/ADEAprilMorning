@@ -1,0 +1,21 @@
+{
+	"name": "DS_SHIR_SqlServer_SalesOrder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_AprilADE",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "sales_order.parquet",
+				"fileSystem": "sink"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,21 @@
+{
+	"name": "LS_OnPrem_AdventureWorks",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "DESKTOP-SEDK2UR\\MSSQLSERVER01",
+			"database": "AdventureWorksLT2019",
+			"encrypt": "optional",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "dbadmin",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI2ZWM3YzA0OC01NjdhLTQ2MWEtYTFmZS1hZmY5MjA1NDI0ZDIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SHIR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

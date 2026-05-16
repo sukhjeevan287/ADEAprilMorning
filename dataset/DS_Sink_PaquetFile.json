@@ -1,0 +1,21 @@
+{
+	"name": "DS_Sink_PaquetFile",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_AprilADE",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "adventure.parquet",
+				"fileSystem": "sink"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
