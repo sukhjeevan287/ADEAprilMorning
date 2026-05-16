@@ -1,0 +1,60 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ademorningapriltraining"
+		},
+		"LS_ADLS_AprilADE_accountKey": {
+			"value": ""
+		},
+		"LS_DatabaseConn_Adventureworks_password": {
+			"value": ""
+		},
+		"LS_OnPrem_AdventureWorks_password": {
+			"value": ""
+		},
+		"LS_SQLServer_OnPrem_password": {
+			"value": ""
+		},
+		"DS_Source_Rest_JSON_Data_properties_typeProperties_url": {
+			"value": "https://jsonplaceholder.typicode.com/"
+		},
+		"LS_ADLS_AprilADE_properties_typeProperties_url": {
+			"value": "https://morningaprilbatchade.dfs.core.windows.net/"
+		},
+		"LS_DatabaseConn_Adventureworks_properties_typeProperties_server": {
+			"value": "trainingdbdev.database.windows.net"
+		},
+		"LS_DatabaseConn_Adventureworks_properties_typeProperties_database": {
+			"value": "adventureworks"
+		},
+		"LS_DatabaseConn_Adventureworks_properties_typeProperties_userName": {
+			"value": "dbadmin"
+		},
+		"LS_OnPrem_AdventureWorks_properties_typeProperties_server": {
+			"value": "DESKTOP-SEDK2UR\\MSSQLSERVER01"
+		},
+		"LS_OnPrem_AdventureWorks_properties_typeProperties_database": {
+			"value": "AdventureWorksLT2019"
+		},
+		"LS_OnPrem_AdventureWorks_properties_typeProperties_userName": {
+			"value": "dbadmin"
+		},
+		"LS_SQLServer_OnPrem_properties_typeProperties_server": {
+			"value": "DESKTOP-SEDK2UR\\MSSQLSERVER01"
+		},
+		"LS_SQLServer_OnPrem_properties_typeProperties_database": {
+			"value": "AdventureWorksLT2019"
+		},
+		"LS_SQLServer_OnPrem_properties_typeProperties_userName": {
+			"value": "dbadminevn"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
