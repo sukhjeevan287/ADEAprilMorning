@@ -50,7 +50,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> source1",
+				"     format: 'parquet',",
+				"     partitionBy('hash', 1)) ~> source1",
 				"source1 select(mapColumn(",
 				"          CustomerID,",
 				"          Title,",
@@ -65,16 +66,20 @@
 				"          PasswordSalt,",
 				"          ModifiedDate",
 				"     ),",
+				"     partitionBy('hash', 1),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 derive(Full_Name = concat(Title,' ', FirstName,' ',MiddleName,' ', LastName)) ~> derivedColumn1",
+				"select1 derive(Full_Name = concat(Title,' ', FirstName,' ',MiddleName,' ', LastName),",
+				"     partitionBy('hash', 1)) ~> derivedColumn1",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     partitionFileNames:['TransformedCustomer.csv'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
 	}
