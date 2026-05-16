@@ -1,0 +1,23 @@
+{
+	"name": "DS_Sink_CSV_CustomerPostTransformation",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_AprilADE",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "TransformedCustomer",
+				"fileSystem": "sink"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
