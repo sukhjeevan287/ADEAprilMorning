@@ -46,6 +46,7 @@
 						"value": "@activity('Lookup etl_metadata_morning').output.value",
 						"type": "Expression"
 					},
+					"isSequential": true,
 					"activities": [
 						{
 							"name": "If Condition1",
@@ -59,6 +60,18 @@
 								},
 								{
 									"activity": "SinkType",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "watermarkColumn",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "watermarkValue",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -133,17 +146,6 @@
 											}
 										]
 									}
-								],
-								"ifTrueActivities": [
-									{
-										"name": "Wait1",
-										"type": "Wait",
-										"dependsOn": [],
-										"userProperties": [],
-										"typeProperties": {
-											"waitTimeInSeconds": 1
-										}
-									}
 								]
 							}
 						},
@@ -159,7 +161,7 @@
 							"typeProperties": {
 								"variableName": "tableName",
 								"value": {
-									"value": "@item().table_name",
+									"value": "@item().source_table",
 									"type": "Expression"
 								}
 							}
@@ -180,6 +182,40 @@
 									"type": "Expression"
 								}
 							}
+						},
+						{
+							"name": "watermarkColumn",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "watermarkColumn",
+								"value": {
+									"value": "@item().incremental_column",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "watermarkValue",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "watermarkValue",
+								"value": {
+									"value": "@item().last_watermark_value",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -196,6 +232,12 @@
 				"type": "String"
 			},
 			"SinkType": {
+				"type": "String"
+			},
+			"watermarkColumn": {
+				"type": "String"
+			},
+			"watermarkValue": {
 				"type": "String"
 			}
 		},

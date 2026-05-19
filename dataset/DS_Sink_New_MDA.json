@@ -19,7 +19,7 @@
 					"value": "@concat(dataset().FileName,'.csv')",
 					"type": "Expression"
 				},
-				"fileSystem": "MDA"
+				"fileSystem": "metadatadrivenarch"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
