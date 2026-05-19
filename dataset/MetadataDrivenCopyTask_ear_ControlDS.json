@@ -1,0 +1,19 @@
+{
+	"name": "MetadataDrivenCopyTask_ear_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_DatabaseConn_Adventureworks",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenCopyTask_ear_20260519"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "SalesLT",
+			"table": "MainControlTable_Morning"
+		}
+	}
+}
