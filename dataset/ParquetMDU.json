@@ -1,0 +1,28 @@
+{
+	"name": "ParquetMDU",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_AprilADE",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"file": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat(dataset().file,'.parquet')",
+					"type": "Expression"
+				},
+				"fileSystem": "metadatadrivenarch"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

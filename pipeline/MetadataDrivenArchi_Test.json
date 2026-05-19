@@ -1,0 +1,345 @@
+{
+	"name": "MetadataDrivenArchi_Test",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup etl_metadata_morning",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": " select * from SalesLT.etl_metadata_morning where is_active='Y'",
+						"queryTimeout": "00:10:00",
+						"isolationLevel": "ReadUncommitted",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_Azure_SQL_Sorce",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup etl_metadata_morning",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup etl_metadata_morning').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "If Condition1",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "TableName",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "SinkType",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "watermarkColumn",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "watermarkValue",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().load_type,'IncrementalLoad')",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "FullLoad",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "@concat('select * from ', variables('tableName'))",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"sink": {
+												"type": "DelimitedTextSink",
+												"storeSettings": {
+													"type": "AzureBlobFSWriteSettings"
+												},
+												"formatSettings": {
+													"type": "DelimitedTextWriteSettings",
+													"quoteAllText": true,
+													"fileExtension": ".txt"
+												}
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "DS_Source_CopyMultipleTables",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "DS_Sink_New_MDA",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@variables('SinkType')",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "Lookup1",
+										"type": "Lookup",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "@concat('SELECT MAX(''',variables('watermarkColumn'), ''') FROM ', variables('tableName'))",
+													"type": "Expression"
+												},
+												"queryTimeout": "00:10:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "DS_Azure_SQL_Sorce",
+												"type": "DatasetReference"
+											},
+											"firstRowOnly": false
+										}
+									},
+									{
+										"name": "Copy data1",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Lookup1",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "@concat(\n'select * from ',\nvariables('tableName'),\n' where ',\nvariables('watermarkColumn'),\n' > ''',\nvariables('watermarkValue'),\n''''\n)",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"isolationLevel": "ReadCommitted",
+												"partitionOption": "None"
+											},
+											"sink": {
+												"type": "ParquetSink",
+												"storeSettings": {
+													"type": "AzureBlobFSWriteSettings"
+												},
+												"formatSettings": {
+													"type": "ParquetWriteSettings"
+												}
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "DS_Azure_SQL_Sorce",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "ParquetMDU",
+												"type": "DatasetReference",
+												"parameters": {
+													"file": {
+														"value": "@variables('tableName')",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "TableName",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "tableName",
+								"value": {
+									"value": "@item().source_table",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "SinkType",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "SinkType",
+								"value": {
+									"value": "@item().target_path",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "watermarkColumn",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "watermarkColumn",
+								"value": {
+									"value": "@item().incremental_column",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "watermarkValue",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "watermarkValue",
+								"value": {
+									"value": "@item().last_watermark_value",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"tableName": {
+				"type": "String"
+			},
+			"CurrentItem": {
+				"type": "Array"
+			},
+			"CurrenItemNew": {
+				"type": "String"
+			},
+			"SinkType": {
+				"type": "String"
+			},
+			"watermarkColumn": {
+				"type": "String"
+			},
+			"watermarkValue": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
