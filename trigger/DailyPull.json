@@ -1,0 +1,35 @@
+{
+	"name": "DailyPull",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "CopyJSONData",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Month",
+				"interval": 12,
+				"startTime": "2026-05-23T02:53:00",
+				"timeZone": "India Standard Time",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						16
+					],
+					"monthDays": [
+						1
+					]
+				}
+			}
+		}
+	}
+}
