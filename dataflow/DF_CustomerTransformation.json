@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DS_Sink_CSV_CustomerPostTransformation",
+						"referenceName": "DS_Parquet_Sink_DimCustomer",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -26,7 +26,11 @@
 					"name": "select1"
 				},
 				{
-					"name": "derivedColumn1"
+					"name": "flowlet1",
+					"flowlet": {
+						"referenceName": "flowlet1",
+						"type": "DataFlowReference"
+					}
 				}
 			],
 			"scriptLines": [
@@ -53,33 +57,29 @@
 				"     format: 'parquet',",
 				"     partitionBy('hash', 1)) ~> source1",
 				"source1 select(mapColumn(",
-				"          CustomerID,",
-				"          Title,",
 				"          FirstName,",
 				"          MiddleName,",
 				"          LastName,",
-				"          CompanyName,",
-				"          SalesPerson,",
-				"          EmailAddress,",
-				"          Phone,",
-				"          PasswordHash,",
-				"          PasswordSalt,",
-				"          ModifiedDate",
+				"          CustomerID",
 				"     ),",
 				"     partitionBy('hash', 1),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 derive(Full_Name = concat(Title,' ', FirstName,' ',MiddleName,' ', LastName),",
-				"     partitionBy('hash', 1)) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"select1 compose(mapColumn(",
+				"          CustomerID,",
+				"          FirstName,",
+				"          MiddleName,",
+				"          LastName",
+				"     ),",
+				"     composition: 'flowlet1') ~> flowlet1@(output1)",
+				"flowlet1@output1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['TransformedCustomer.csv'],",
+				"     format: 'parquet',",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
